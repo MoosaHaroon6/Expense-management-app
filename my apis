@@ -1,0 +1,14 @@
+api  :
+
+
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_cHJpbWUtcGVyY2gtMC5jbGVyay5hY2NvdW50cy5kZXYk
+CLERK_SECRET_KEY=sk_test_gubmGM451XgfxOPmGnJLuy9mxjizY0kgIe67QEAk9J
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+
+NEXT_PUBLIC_apiKey: "AIzaSyBQDAkXsWSozi0-0W3PglJ-2Ur1qqPhFSs"
+NEXT_PUBLIC_authDomain: "expense-manager-f6662.firebaseapp.com"
+NEXT_PUBLIC_projectId: "expense-manager-f6662"
+NEXT_PUBLIC_storageBucket: "expense-manager-f6662.firebasestorage.app"
+NEXT_PUBLIC_messagingSenderId: "135684524476"
+NEXT_PUBLIC_appId: "1:135684524476:web:908e2f5fb5503fc49a83b9"
