@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface BudgetItemProps {
     budget: {
         id: string;
@@ -21,8 +19,8 @@ function BudgetItem({ budget }: BudgetItemProps) {
                         <h2>{budget.name}</h2>
                         <h2 className='text-sm text-gray-400'>0{budget.totalItem}Item</h2>
                     </div>
-                    <h2 className='text-primary font-bold'>${budget.amount}</h2>
                 </div>
+                    <h2 className='text-primary font-bold'>${budget.amount}</h2>
             </div>
 
             <div className='mt-5'>

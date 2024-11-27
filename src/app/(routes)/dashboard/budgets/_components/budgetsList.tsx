@@ -11,6 +11,8 @@ interface Budget {
   name: string;
   amount: number;
   emoji: string;
+  totalSpend: number;
+  totalItem: string
 }
 
 function BudgetsList() {

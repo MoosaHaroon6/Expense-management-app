@@ -6,7 +6,7 @@ import { UserButton, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 
 export default function Header() {
-    const { user, isSignedIn } = useUser();
+    const { isSignedIn } = useUser();
 
     const route = useRouter();
 
@@ -22,10 +22,21 @@ export default function Header() {
                 height={150}
                 width={150}
             />
-            {isSignedIn ?
-                <UserButton /> :
-                <Button onClick={getStartedHandler}>Get Started</Button>
-            }
+            <div className='w-[150px] flex justify-between items-center'>
+                {isSignedIn &&
+                    <Button
+                        onClick={() => route.push('/dashboard')}
+                        variant={'outline'}
+                        className='hover:bg-purple-700 hover:text-slate-100'
+                    >Dashboard
+                    </Button>
+                }
+
+                {isSignedIn ?
+                    <UserButton /> :
+                    <Button onClick={getStartedHandler}>Get Started</Button>
+                }
+            </div>
         </div>
     )
 }
