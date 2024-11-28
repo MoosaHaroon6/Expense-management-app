@@ -1,56 +1,88 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { db } from '@/firebase/firebaseConfig';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../../../../utils/dbConfig';
+import { Budgets, Expenses } from '../../../../../../utils/schema';
+import { eq, sql } from 'drizzle-orm';
+import { useUser } from '@clerk/nextjs';
+import BudgetItem from '../../budgets/_components/budgetItem';
+import AddExpense from '../_components/AddExpense';
 
 interface Budget {
-  id: string;
-  name: string;
-  amount: number;
-  emoji: string;
-  createdAt: Date;
+    id: string | number;
+    name: string;
+    amount: number;
+    emoji: string;
+    totalSpend: number;
+    totalItems: number;
 }
 
-function Expenses({ params }: { params: { id: string } }) {
-  const [budget, setBudget] = useState<Budget | null>(null);
+interface Props {
+    params: {
+        id: string;
+    };
+}
 
-  const getBudgetInfo = async () => {
-    try {
-      const budgetDocRef = doc(db, "budgets", params.id);
-      const budgetSnapshot = await getDoc(budgetDocRef);
+function DisplayExpenses({ params }: Props) {
+    const { user } = useUser(); // Clerk user context
+    const [budgetInfo, setBudgetInfo] = useState<Budget | null>(null);
 
-      if (budgetSnapshot.exists()) {
-        const budgetData = { id: budgetSnapshot.id, ...budgetSnapshot.data() } as Budget;
-        setBudget(budgetData);
-      } else {
-        console.error("No budget found with the provided ID.");
-      }
-    } catch (error) {
-      console.error("Error fetching budget details: ", error);
-    }
-  };
+    useEffect(() => {
+        if (user) fetchBudgetInfo();
+    }, [user]);
 
-  useEffect(() => {
-    if (params.id) {
-      getBudgetInfo();
-    }
-  }, [params.id]);
+    const fetchBudgetInfo = async () => {
+        const email = user?.primaryEmailAddress?.emailAddress;
 
-  return (
-    <div className='p-10'>
-      {budget ? (
-        <div>
-          <h2 className='text-3xl font-bold'>{budget.name}</h2>
-          <p className='text-xl mt-4'>Amount: ${budget.amount}</p>
-          <p className='text-xl mt-4'>Emoji: {budget.emoji}</p>
-          <p className='text-sm mt-4'>Created At: {budget.createdAt.toString()}</p>
+        if (email) {
+            try {
+                const result = await db
+                    .select({
+                        id: Budgets.id,
+                        name: Budgets.name,
+                        amount: Budgets.amount,
+                        emojiIcon: Budgets.emojiIcon,
+                        totalSpend: sql`sum(${Expenses.amount})`.mapWith(Number),
+                        totalItems: sql`count(${Expenses.id})`.mapWith(Number),
+                    })
+                    .from(Budgets)
+                    .leftJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
+                    .where(
+                        sql`${Budgets.createdBy} = ${email} AND ${Budgets.id} = ${params.id}`
+                    )
+                    .groupBy(Budgets.id);
+
+                const transformedBudget = result.map((budget: any) => ({
+                    id: budget.id,
+                    name: budget.name,
+                    amount: budget.amount,
+                    emoji: budget.emojiIcon || '',
+                    totalSpend: budget.totalSpend || 0,
+                    totalItems: budget.totalItems || 0,
+                }))[0];
+
+                setBudgetInfo(transformedBudget || null);
+            } catch (error) {
+                console.error('Error fetching budget info:', error);
+            }
+        }
+    };
+
+    return (
+        <div className="p-10 rounded-lg">
+            <h2 className="text-2xl font-bold">My Expenses</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 mt-5 gap-5">
+                {budgetInfo ? (
+                    <BudgetItem budget={budgetInfo} />
+                ) : (
+                    <div className="h-[150px] w-full bg-slate-200 rounded-lg animate-pulse"></div>
+                )}
+                <AddExpense
+                    budgetId={params.id}
+                    refreshData={fetchBudgetInfo} />
+            </div>
         </div>
-      ) : (
-        <p>Loading budget details...</p>
-      )}
-    </div>
-  );
+    );
 }
 
-export default Expenses;
+export default DisplayExpenses;

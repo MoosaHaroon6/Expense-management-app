@@ -4,7 +4,6 @@ import Image from 'next/image'
 import { LayoutGrid, ReceiptText, ShieldCheck, Wallet } from 'lucide-react'
 import { UserButton } from '@clerk/nextjs'
 import path from 'path'
-import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 export default function Sidebar() {
@@ -35,8 +34,6 @@ export default function Sidebar() {
             path: '/dashboard/upgrade'
         }
     ]
-
-    const params = usePathname()
 
     return (
         <div className='h-screen p-5 border shadow-sm '>

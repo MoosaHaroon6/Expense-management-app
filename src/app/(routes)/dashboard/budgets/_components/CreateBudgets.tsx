@@ -1,57 +1,49 @@
 'use client';
+
 import React, { useState } from 'react'
 import {
-    Dialog, DialogClose, DialogContent,
+    Dialog,
+    DialogClose,
+    DialogContent,
     DialogDescription,
     DialogFooter,
-    DialogHeader, DialogTitle, DialogTrigger,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from '@/components/ui/button';
 import EmojiPicker from 'emoji-picker-react';
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '@/firebase/firebaseConfig';
 import { toast } from 'sonner';
 import { useUser } from '@clerk/nextjs';
+import { db } from '../../../../../../utils/dbConfig';
+import { Budgets } from '../../../../../../utils/schema';
 
 
-function CreateBudgets() {
+function CreateBudgets({ refreshData }: { refreshData: () => void; }) {
 
-    const { user } = useUser();
+    const { user } = useUser(); // clerkUser
 
-    const [emoji, setEmoji] = useState('😃');
-    const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
+    const [emoji, setEmoji] = useState('😃'); // emoji state
+    const [openEmojiPicker, setOpenEmojiPicker] = useState(false); // toggler state
+    const [name, setName] = useState<string | ''>(''); // budget name state
+    const [amount, setAmount] = useState<number | null>(null); // budget amount state
 
-    const [name, setName] = useState('');
-    const [amount, setAmount] = useState<number | null>(null);
-
+    // budget handler (saves/displays)
     const saveBudgetHandler = async () => {
-        if (!user) {
-            toast.error("Please log in to create a budget");
-            return;
+        const result = await db.insert(Budgets)
+            .values({
+                name: name as string,
+                amount: amount,
+                createdBy: user?.primaryEmailAddress?.emailAddress,
+                emojiIcon: emoji || '😃'
+            }).returning({ insertedId: Budgets.id })
+
+        if (result) {
+            refreshData();
+            toast('Your Budget Has Been Created!');
         }
 
-        const budgetObj = {
-            name,
-            amount,
-            emoji,
-            userId: user.id,
-            createdAt: new Date().toLocaleDateString(),
-        };
-        try {
-            const docRef = await addDoc(collection(db, "budgets"), budgetObj);
-            console.log("Budget saved with ID:", docRef.id);
-
-            setName('');
-            setAmount(null);
-            setEmoji('😃');
-            setOpenEmojiPicker(false);
-
-            if (docRef) {
-                toast('Your Budget Has Been Saved!');
-            }
-        } catch (error) {
-            console.error("Error adding document: ", error);
-        }
+        console.log({ name, amount, createdBy: user?.primaryEmailAddress?.emailAddress });
 
     }
 
@@ -101,13 +93,17 @@ function CreateBudgets() {
                                         onChange={(e) => setAmount(Number(e.target.value))}
                                     />
                                 </div>
-                                <Button
-                                    disabled={!name && !amount}
-                                    onClick={saveBudgetHandler}
-                                    className='mt-5 w-full'>Create Budget</Button>
                             </div>
                         </DialogDescription>
                     </DialogHeader>
+                    <DialogFooter className="sm:justify-start">
+                        <DialogClose asChild>
+                            <Button
+                                disabled={!name && !amount}
+                                onClick={saveBudgetHandler}
+                                className='mt-5 w-full'>Create Budget</Button>
+                        </DialogClose>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
 
