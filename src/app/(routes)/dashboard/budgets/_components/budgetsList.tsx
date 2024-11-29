@@ -17,13 +17,14 @@ interface Budget {
   totalItems: number;
 }
 
-
 function BudgetsList() {
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const { user } = useUser();
 
   useEffect(() => {
-    user && fetchBudgets();
+    if (user) {
+      fetchBudgets();
+    }
   }, [user]);
 
 
