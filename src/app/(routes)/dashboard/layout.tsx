@@ -1,7 +1,7 @@
 'use client';
 
-import DashboardNavbar from "@/app/(routes)/_components/Dashboard-navbar";
-import Sidebar from "@/app/(routes)/_components/Sidebar";
+import DashboardNavbar from "@/app/(routes)/dashboard/_components/Dashboard-navbar";
+import Sidebar from "@/app/(routes)/dashboard/_components/Sidebar";
 import { ReactNode, useEffect } from "react";
 import { db } from "../../../../utils/dbConfig";
 import { Budgets } from "../../../../utils/schema";
@@ -39,7 +39,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <div className="fixed md:w-64 hidden md:block">
                 <Sidebar />
             </div>
-            <div className="md:ml-64 ">
+            <div className="md:ml-64 mr-10 ">
                 <DashboardNavbar />
                 {children}
             </div>

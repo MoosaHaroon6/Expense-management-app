@@ -6,6 +6,7 @@ import { db } from "../../../../../../utils/dbConfig";
 import { Expenses } from "../../../../../../utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
+import moment from 'moment';
 
 interface Props {
     budgetId: string;
@@ -15,10 +16,8 @@ interface Props {
 function AddExpense({ budgetId, refreshData }: Props) {
     const [expenseName, setExpenseName] = useState('');
     const [expenseAmount, setExpenseAmount] = useState<number | ''>('');
-    const { user } = useUser(); // Clerk user context
 
     const addNewExpenseHandler = async () => {
-        const email = user?.primaryEmailAddress?.emailAddress;
 
         if (!expenseName || !expenseAmount) {
             toast.error("Please fill out all fields.");
@@ -30,7 +29,7 @@ function AddExpense({ budgetId, refreshData }: Props) {
                 name: expenseName,
                 amount: Number(expenseAmount),
                 budgetId,
-                createdAt: email,
+                createdAt: moment().format('DD/MM/YYYY'),
             });
 
             if (result) {

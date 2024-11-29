@@ -11,7 +11,7 @@ interface BudgetItemProps {
     };
 }
 
-function BudgetItem({ budget }: BudgetItemProps) {
+function BudgetItem({ budget  }: BudgetItemProps) {
 
     const calculateBudgetPercentage = () => {
         const total = (budget.totalSpend / budget.amount) * 100;
@@ -20,7 +20,7 @@ function BudgetItem({ budget }: BudgetItemProps) {
 
     return (
         <Link
-            href={'/dashboard/expenses/' + budget.id}
+            href={`/dashboard/expenses/${budget.id}`}
             className='p-5 border rounded-lg gap-2 hover:shadow-md cursor-pointer h-[160px]'>
             <div className='flex gap-2 items-center justify-between'>
                 <div className='flex gap-2 items-center'>
