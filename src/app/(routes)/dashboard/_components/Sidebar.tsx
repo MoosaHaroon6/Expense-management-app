@@ -3,10 +3,13 @@ import React from 'react'
 import Image from 'next/image'
 import { LayoutGrid, ReceiptText, ShieldCheck, Wallet } from 'lucide-react'
 import { UserButton } from '@clerk/nextjs'
-import path from 'path'
 import Link from 'next/link'
+import { Budgets } from '../../../../../utils/schema'
+import { useRouter } from 'next/navigation'
 
 export default function Sidebar() {
+
+    const route = useRouter();
 
     const menuList = [
         {
@@ -23,9 +26,9 @@ export default function Sidebar() {
         },
         {
             id: 3,
-            title: 'Expenses',
+            title: 'Expenses', // For a specific expense
             icon: ReceiptText,
-            path: '/dashboard/expenses'
+            path: `/dashboard/expense` // Replace `id` dynamically based on your use case
         },
         {
             id: 4,
@@ -33,7 +36,8 @@ export default function Sidebar() {
             icon: ShieldCheck,
             path: '/dashboard/upgrade'
         }
-    ]
+    ];
+
 
     return (
         <div className='h-screen p-5 border shadow-sm '>
@@ -45,12 +49,12 @@ export default function Sidebar() {
             />
             <div className='mt-5'>
                 {menuList.map((menu) => (
-                    <Link 
-                    key={menu.id} href={menu.path}>
+                    <Link
+                        key={menu.id} href={menu.path}>
                         <h2
                             className={`flex gap-2 items-center text-gray-500 font-medium p-5
                      cursor-pointer rounded-md hover:text-primary hover:bg-purple-100
-                     ${path === menu.path && 'text-primary'} `}
+                        `}
                         >
                             {menu.title}
                             <menu.icon />
@@ -61,8 +65,7 @@ export default function Sidebar() {
             <div className='fixed bottom-10 flex gap-2 items-center ml-[-10]'>
                 <UserButton /> Profile
             </div>
-
         </div>
-    )
+    );
 }
 

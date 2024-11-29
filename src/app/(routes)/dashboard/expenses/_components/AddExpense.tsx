@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { db } from "../../../../../../utils/dbConfig";
 import { Expenses } from "../../../../../../utils/schema";
-import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import moment from 'moment';
+import { Loader } from "lucide-react";
 
 interface Props {
     budgetId: string;
@@ -16,6 +16,7 @@ interface Props {
 function AddExpense({ budgetId, refreshData }: Props) {
     const [expenseName, setExpenseName] = useState('');
     const [expenseAmount, setExpenseAmount] = useState<number | ''>('');
+    const [loader, setLoader] = useState(false);
 
     const addNewExpenseHandler = async () => {
 
@@ -24,6 +25,7 @@ function AddExpense({ budgetId, refreshData }: Props) {
             return;
         }
 
+        setLoader(true);
         try {
             const result = await db.insert(Expenses).values({
                 name: expenseName,
@@ -37,6 +39,7 @@ function AddExpense({ budgetId, refreshData }: Props) {
                 refreshData();
                 setExpenseName('');
                 setExpenseAmount('');
+                setLoader(false);
             }
         } catch (error) {
             console.error("Error adding expense:", error);
@@ -71,8 +74,10 @@ function AddExpense({ budgetId, refreshData }: Props) {
                 className="mt-3 w-full"
                 disabled={!expenseName || !expenseAmount}
                 onClick={addNewExpenseHandler}
-            >
-                Add New Expense
+            >{loader ?
+                <Loader className="animate-spin" /> : "Add New Expense"
+
+                }
             </Button>
         </div>
     );

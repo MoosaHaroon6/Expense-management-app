@@ -53,7 +53,7 @@ function CreateBudgets({ refreshData }: { refreshData: () => void; }) {
                 <DialogTrigger asChild>
                     <div className='bg-slate-100 p-10 rounded-md flex
                      items-center flex-col border-2 border-dashed
-                    cursor-pointer hover:shadow-md'
+                    cursor-pointer hover:shadow-md mt-6 h-[160px]'
                     >
                         <h2>+</h2>
                         <h2>Create New Budget</h2>

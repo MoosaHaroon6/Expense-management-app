@@ -41,8 +41,9 @@ function CardInfo({ budgetList }: CardInfoProps) {
     return (
         <>
             {budgetList.length !== 0 ? (
-                <div className="mr-[100px] mt-7 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-5">
-                    <div className="p-7 border flex items-center justify-between rounded-lg">
+                <div className="mr-[100px] mt-7 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9 p-5">
+                    <div className="p-7 border flex items-center justify-between rounded-lg w-[320px] shadow-xl
+                    hover:shadow-lg hover:shadow-purple-300">
                         <div>
                             <h2 className="text-sm">Total Budget</h2>
                             <h2 className="font-bold text-2xl">${totalBudget.toLocaleString()}</h2>
@@ -50,7 +51,8 @@ function CardInfo({ budgetList }: CardInfoProps) {
                         <WalletCards className="bg-primary p-3 h-12 w-12 rounded-full text-white" />
                     </div>
 
-                    <div className="p-7 border flex items-center justify-between rounded-lg">
+                    <div className="p-7 border flex items-center justify-between rounded-lg w-[320px] shadow-purple-300 
+                    shadow-lg ">
                         <div>
                             <h2 className="text-sm">Total Spend</h2>
                             <h2 className="font-bold text-2xl">${totalSpend.toLocaleString()}</h2>
@@ -58,7 +60,8 @@ function CardInfo({ budgetList }: CardInfoProps) {
                         <ReceiptText className="bg-primary p-3 h-12 w-12 rounded-full text-white " />
                     </div>
 
-                    <div className="p-7 border flex items-center justify-between rounded-lg">
+                    <div className="p-7 border flex items-center justify-between rounded-lg w-[320px] shadow-xl
+                     hover:shadow-lg hover:shadow-purple-300">
                         <div>
                             <h2 className="text-sm">No. of Budgets</h2>
                             <h2 className="font-bold text-2xl">{budgetList.length}</h2>
