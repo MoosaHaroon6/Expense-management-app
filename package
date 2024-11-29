@@ -8,3 +8,10 @@ Example
   NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
   
   NEXT_PUBLIC_DATABASE_URL=postgresql://expense-db_owner:d9jBp1JXLbgG@ep-damp-flower-a5uypc1v.us-east-2.aws.neon.tech/expense-db?sslmode=require
+
+
+npx drizzle-kit studio 
+npm run dev
+
+
+.env.local ==>PA
