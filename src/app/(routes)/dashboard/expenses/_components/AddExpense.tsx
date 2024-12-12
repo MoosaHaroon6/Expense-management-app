@@ -9,7 +9,7 @@ import moment from 'moment';
 import { Loader } from "lucide-react";
 
 interface Props {
-    budgetId: string;
+    budgetId: string; // Ensure this is a string or convert appropriately
     refreshData: () => void;
 }
 
@@ -19,33 +19,44 @@ function AddExpense({ budgetId, refreshData }: Props) {
     const [loader, setLoader] = useState(false);
 
     const addNewExpenseHandler = async () => {
-
         if (!expenseName || !expenseAmount) {
             toast.error("Please fill out all fields.");
             return;
         }
-
+    
         setLoader(true);
+    
         try {
+            const parsedBudgetId = Number(budgetId);
+    
+            if (isNaN(parsedBudgetId)) {
+                toast.error("Invalid budget ID.");
+                setLoader(false);
+                return;
+            }
+    
+            // Insert data into the database
             const result = await db.insert(Expenses).values({
-                name: expenseName,
-                amount: Number(expenseAmount),
-                budgetId,
-                createdAt: moment().format('DD/MM/YYYY'),
+                name: expenseName,               // varchar
+                amount: expenseAmount.toString(), // numeric 
+                budgetId: parsedBudgetId,        // integer
+                createdAt: moment().format('YYYY-MM-DD'), // varchar 
             });
-
+    
             if (result) {
                 toast.success("New Expense Added!");
                 refreshData();
                 setExpenseName('');
                 setExpenseAmount('');
-                setLoader(false);
             }
         } catch (error) {
             console.error("Error adding expense:", error);
             toast.error("Failed to add expense.");
+        } finally {
+            setLoader(false);
         }
     };
+    
 
     return (
         <div>
@@ -74,10 +85,8 @@ function AddExpense({ budgetId, refreshData }: Props) {
                 className="mt-3 w-full"
                 disabled={!expenseName || !expenseAmount}
                 onClick={addNewExpenseHandler}
-            >{loader ?
-                <Loader className="animate-spin" /> : "Add New Expense"
-
-                }
+            >
+                {loader ? <Loader className="animate-spin" /> : "Add New Expense"}
             </Button>
         </div>
     );

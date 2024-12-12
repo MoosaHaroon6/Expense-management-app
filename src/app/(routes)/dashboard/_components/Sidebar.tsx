@@ -4,12 +4,8 @@ import Image from 'next/image'
 import { LayoutGrid, ReceiptText, ShieldCheck, Wallet } from 'lucide-react'
 import { UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
-import { Budgets } from '../../../../../utils/schema'
-import { useRouter } from 'next/navigation'
 
 export default function Sidebar() {
-
-    const route = useRouter();
 
     const menuList = [
         {
